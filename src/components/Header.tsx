@@ -3,7 +3,7 @@
 import React from 'react';
 import { CollectorUser } from '@/lib/types';
 import { COMMITTEE_INFO } from '@/lib/defaultUsers';
-import { LogOut, PlusCircle, Database, ShieldCheck, MapPin } from 'lucide-react';
+import { LogOut, PlusCircle, ShieldCheck, MapPin } from 'lucide-react';
 import Image from 'next/image';
 
 interface HeaderProps {
@@ -11,7 +11,7 @@ interface HeaderProps {
   onOpenLogin: () => void;
   onLogout: () => void;
   onOpenNewEntry: () => void;
-  isLiveMongo: boolean;
+  isLiveMongo?: boolean;
 }
 
 export default function Header({
@@ -19,7 +19,6 @@ export default function Header({
   onOpenLogin,
   onLogout,
   onOpenNewEntry,
-  isLiveMongo,
 }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 bg-gradient-to-r from-red-900 via-amber-800 to-red-950 text-white shadow-lg border-b-2 border-amber-400">
@@ -41,17 +40,6 @@ export default function Header({
               <div className="flex items-center justify-center sm:justify-start gap-2">
                 <span className="text-[11px] font-semibold text-amber-200 tracking-wider uppercase">
                   ॥ स्थापित सन् २००१ ॥
-                </span>
-                <span
-                  className={`inline-flex items-center text-[10px] px-2 py-0.5 rounded-full font-medium ${
-                    isLiveMongo
-                      ? 'bg-emerald-500/25 text-emerald-200 border border-emerald-400/50'
-                      : 'bg-amber-400/20 text-amber-100 border border-amber-300/40'
-                  }`}
-                  title={isLiveMongo ? 'Connected to MongoDB Atlas' : 'Running on fast local storage'}
-                >
-                  <Database className="w-2.5 h-2.5 mr-1" />
-                  {isLiveMongo ? 'MongoDB Atlas Active' : 'Offline / Local Store'}
                 </span>
               </div>
               <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-white drop-shadow-sm leading-snug">

@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { ChandaEntry } from '@/lib/types';
-import { DEFAULT_COLLECTORS } from '@/lib/defaultUsers';
+import { DEFAULT_COLLECTORS, COMMITTEE_INFO } from '@/lib/defaultUsers';
 import {
   Search,
   Filter,
@@ -140,14 +140,15 @@ export default function LogBook({
 
   const handleWhatsAppQuickShare = (item: ChandaEntry) => {
     const formattedDate = new Date(item.createdAt).toLocaleDateString('hi-IN');
-    const text = `🔱 *श्री दुर्गा पूजा समिति, रौज़ा रोड सासाराम* 🔱\n` +
+    const text = `🔱 *${COMMITTEE_INFO.name}* 🔱\n` +
+      `*${COMMITTEE_INFO.subtitle}*\n` +
       `डिजिटल चंदा रसीद: *${item.receiptNo}*\n` +
       `दाता: *${item.donorName}*\n` +
       `सहयोग राशि: *₹${item.amount.toLocaleString('en-IN')}*\n` +
       `भुगतान: *${item.paymentMode}*\n` +
       `संग्रहकर्ता: *${item.collectedBy.name}*\n` +
       `दिनांक: ${formattedDate}\n` +
-      `माँ दुर्गा की असीम अनुकम्पा आप पर सदैव बनी रहे! 🙏`;
+      `माँ भगवती की असीम कृपा आप और आपके परिवार पर सदैव बनी रहे! 🙏`;
 
     const encoded = encodeURIComponent(text);
     const phoneClean = item.phone ? item.phone.replace(/\D/g, '') : '';

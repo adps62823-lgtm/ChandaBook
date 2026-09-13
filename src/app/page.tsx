@@ -160,7 +160,6 @@ export default function DashboardPage() {
             setIsNewEntryOpen(true);
           }
         }}
-        isLiveMongo={isLiveMongo}
       />
 
       {/* Toast Notification */}
@@ -391,7 +390,7 @@ export default function DashboardPage() {
           माँ भगवती पूजन कला संघ (ESTD-2001) • कम्पनी सराय, रौज़ा रोड, सासाराम (रोहतास), बिहार
         </p>
         <p className="text-[11px] text-stone-400 mt-1">
-          Zero-Cost Open Source Web Architecture • Vercel & MongoDB Atlas Ready
+          माँ भगवती पूजन कला संघ • सर्वकल्याण एवं धर्मार्थ समर्पित
         </p>
       </footer>
 
