@@ -1,7 +1,7 @@
 export interface CollectorUser {
   id: string;
   name: string;
-  pin: string;
+  pin?: string;
   avatarColor: string;
   phone?: string;
   role?: string;

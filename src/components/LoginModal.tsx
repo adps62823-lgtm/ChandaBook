@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { CollectorUser } from '@/lib/types';
-import { DEFAULT_COLLECTORS } from '@/lib/defaultUsers';
-import { Lock, UserCheck, AlertCircle, Sparkles } from 'lucide-react';
+import { DEFAULT_COLLECTORS, COMMITTEE_INFO } from '@/lib/defaultUsers';
+import { Lock, UserCheck, AlertCircle } from 'lucide-react';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -24,8 +24,6 @@ export default function LoginModal({
   const [loading, setLoading] = useState<boolean>(false);
 
   if (!isOpen) return null;
-
-  const selectedCollector = DEFAULT_COLLECTORS.find((c) => c.id === selectedCollectorId);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,11 +64,6 @@ export default function LoginModal({
     }
   };
 
-  const handleQuickFillPin = (presetPin: string) => {
-    setPin(presetPin);
-    setError('');
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/75 backdrop-blur-sm animate-fadeIn">
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden border-2 border-amber-500/40">
@@ -85,7 +78,7 @@ export default function LoginModal({
             संग्रहकर्ता लॉगिन (Collector Login)
           </h2>
           <p className="text-xs text-amber-200/90 mt-0.5">
-            रौज़ा रोड दुर्गा पूजा समिति, सासाराम • एक बार लॉगिन
+            {COMMITTEE_INFO.name} • {COMMITTEE_INFO.subtitle}
           </p>
           <div className="mt-2 text-[11px] bg-amber-500/20 text-amber-100 py-1 px-3 rounded-full inline-block border border-amber-400/30">
             🔒 जब तक आप साइन आउट नहीं करेंगे, यह लॉगिन इस डिवाइस में सुरक्षित रहेगा
@@ -138,21 +131,9 @@ export default function LoginModal({
 
           {/* PIN Input */}
           <div>
-            <div className="flex justify-between items-center mb-1">
-              <label className="text-xs font-semibold text-stone-700 uppercase tracking-wide">
-                सुरक्षा पिन (4-Digit PIN)
-              </label>
-              {selectedCollector && (
-                <button
-                  type="button"
-                  onClick={() => handleQuickFillPin(selectedCollector.pin)}
-                  className="text-[11px] text-amber-700 hover:text-amber-800 underline flex items-center gap-1 font-medium"
-                >
-                  <Sparkles className="w-3 h-3" />
-                  पिन भरें ({selectedCollector.name} PIN: {selectedCollector.pin})
-                </button>
-              )}
-            </div>
+            <label className="block text-xs font-semibold text-stone-700 mb-1.5 uppercase tracking-wide">
+              सुरक्षा पिन (4-Digit Security PIN)
+            </label>
 
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
@@ -163,11 +144,15 @@ export default function LoginModal({
                 maxLength={4}
                 value={pin}
                 onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
-                placeholder="4 अंकों का पिन दर्ज करें"
+                placeholder="••••"
                 autoFocus
-                className="w-full pl-9 pr-4 py-2.5 text-center tracking-[0.4em] font-mono text-lg border border-stone-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all outline-none"
+                autoComplete="off"
+                className="w-full pl-9 pr-4 py-2.5 text-center tracking-[0.6em] font-mono text-xl border border-stone-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all outline-none"
               />
             </div>
+            <p className="text-[11px] text-stone-500 mt-1">
+              गोपनीय 4 अंकों का सुरक्षा पिन दर्ज करें
+            </p>
           </div>
 
           {/* Submit Button */}

@@ -4,25 +4,21 @@ export const DEFAULT_COLLECTORS: CollectorUser[] = [
   {
     id: 'user_1',
     name: 'User 1',
-    pin: '1001',
     avatarColor: 'bg-amber-600',
   },
   {
     id: 'user_2',
     name: 'User 2',
-    pin: '1002',
     avatarColor: 'bg-rose-600',
   },
   {
     id: 'user_3',
     name: 'User 3',
-    pin: '1003',
     avatarColor: 'bg-orange-600',
   },
   {
     id: 'user_4',
     name: 'User 4',
-    pin: '1004',
     avatarColor: 'bg-red-700',
   },
 ];
