@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'रौज़ा रोड दुर्गा पूजा चंदा बुक | Sasaram ChandaBook',
-  description: 'Durga Puja Pandal Chanda (Donation) Collection & Realtime Map Logbook for Rouza Road, Sasaram',
-  keywords: ['Durga Puja', 'Sasaram', 'Rouza Road', 'Chanda Book', 'Pandal Donation', 'Bihar'],
+  title: 'माँ भगवती पूजन कला संघ | ChandaBook सासाराम',
+  description: 'माँ भगवती पूजन कला संघ (ESTD-2001), कम्पनी सराय, रौज़ा रोड, सासाराम - दुर्गा पूजा चंदा संग्रह बहीखाता एवं मानचित्र',
+  keywords: ['माँ भगवती पूजन कला संघ', 'Durga Puja', 'Sasaram', 'कम्पनी सराय', 'रौज़ा रोड', 'Chanda Book', 'Pandal Donation', 'Bihar'],
 };
 
 export default function RootLayout({

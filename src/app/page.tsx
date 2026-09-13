@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { CollectorUser, ChandaEntry, CollectionStats } from '@/lib/types';
+import { COMMITTEE_INFO } from '@/lib/defaultUsers';
 import Header from '@/components/Header';
 import LoginModal from '@/components/LoginModal';
 import NewEntryModal from '@/components/NewEntryModal';
@@ -171,42 +173,69 @@ export default function DashboardPage() {
 
       {/* Main Content Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5">
-        {/* Festive Welcome Ribbon */}
-        <div className="bg-gradient-to-r from-amber-500/10 via-red-500/10 to-amber-500/10 border border-amber-400/30 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-stone-800">
-          <div className="flex items-center gap-3 text-center sm:text-left">
-            <span className="text-2xl" role="img" aria-label="Puja Bell">
-              🔔
-            </span>
-            <div>
-              <p className="text-xs font-bold text-amber-900 tracking-wide uppercase">
-                माँ दुर्गा पूजा उत्सव • रौज़ा रोड सासाराम
-              </p>
-              <p className="text-xs text-stone-600">
-                चंदा संग्रह बहीखाता एवं रीयल-टाइम मानचित्र
-              </p>
+        {/* Official Puja Banner & Announcement Card */}
+        <div className="bg-white rounded-2xl border border-amber-300/80 shadow-md overflow-hidden">
+          {/* Banner Graphic */}
+          <div className="relative w-full h-36 sm:h-48 md:h-60 bg-amber-950">
+            <Image
+              src={COMMITTEE_INFO.bannerUrl}
+              alt={COMMITTEE_INFO.name}
+              fill
+              priority
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3 sm:p-5">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="px-2.5 py-0.5 bg-amber-500 text-stone-900 text-[10px] sm:text-xs font-black rounded-full uppercase tracking-wider shadow">
+                  ESTD {COMMITTEE_INFO.estd}
+                </span>
+                <span className="text-amber-200 text-xs sm:text-sm font-semibold drop-shadow">
+                  {COMMITTEE_INFO.subtitle} ({COMMITTEE_INFO.district})
+                </span>
+              </div>
+              <h1 className="text-white text-lg sm:text-2xl md:text-3xl font-black drop-shadow-lg mt-0.5">
+                {COMMITTEE_INFO.name}
+              </h1>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={fetchData}
-              disabled={loading}
-              title="डेटा रीफ्रेश करें"
-              className="p-2 text-stone-600 hover:text-stone-900 hover:bg-white/80 rounded-xl border border-stone-200 transition-colors text-xs flex items-center gap-1 font-medium bg-white/50"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-amber-600' : ''}`} />
-              <span className="hidden sm:inline">रीफ्रेश</span>
-            </button>
+          {/* Langar Notice & Action Bar */}
+          <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-amber-200">
+            <div className="flex items-center gap-2.5 text-center sm:text-left">
+              <span className="text-2xl animate-bounce" role="img" aria-label="Prasad / Langar">
+                🍲
+              </span>
+              <div>
+                <p className="text-xs sm:text-sm font-bold text-red-900">
+                  {COMMITTEE_INFO.langarNotice}
+                </p>
+                <p className="text-[11px] text-stone-600">
+                  चंदा संग्रह बहीखाता • 100% डिजिटल रसीद एवं GPS मानचित्र
+                </p>
+              </div>
+            </div>
 
-            {currentUser && (
+            <div className="flex items-center gap-2">
               <button
-                onClick={() => setIsNewEntryOpen(true)}
-                className="bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center gap-1.5"
+                onClick={fetchData}
+                disabled={loading}
+                title="डेटा रीफ्रेश करें"
+                className="p-2 text-stone-600 hover:text-stone-900 hover:bg-white rounded-xl border border-stone-200 transition-colors text-xs flex items-center gap-1 font-medium bg-white/70"
               >
-                <PlusCircle className="w-4 h-4" />
-                <span>+ नया चंदा काटें</span>
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-amber-600' : ''}`} />
+                <span className="hidden sm:inline">रीफ्रेश</span>
               </button>
-            )}
+
+              {currentUser && (
+                <button
+                  onClick={() => setIsNewEntryOpen(true)}
+                  className="bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center gap-1.5"
+                >
+                  <PlusCircle className="w-4 h-4" />
+                  <span>+ नया चंदा काटें</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -359,10 +388,10 @@ export default function DashboardPage() {
       {/* Footer */}
       <footer className="mt-8 border-t border-stone-200 bg-stone-100/80 py-4 text-center text-xs text-stone-500">
         <p className="font-semibold text-stone-700">
-          श्री दुर्गा पूजा समिति • रौज़ा रोड, सासाराम (रोहतास), बिहार
+          माँ भगवती पूजन कला संघ (ESTD-2001) • कम्पनी सराय, रौज़ा रोड, सासाराम (रोहतास), बिहार
         </p>
         <p className="text-[11px] text-stone-400 mt-1">
-          Zero-Cost Open Source Web Architecture • Vercel & MongoDB Ready
+          Zero-Cost Open Source Web Architecture • Vercel & MongoDB Atlas Ready
         </p>
       </footer>
 

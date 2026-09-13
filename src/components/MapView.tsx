@@ -60,19 +60,20 @@ export default function MapView({ entries, onSelectEntry }: MapViewProps) {
         html: `
           <div style="background:#dc2626; color:white; padding:4px 8px; border-radius:12px; font-weight:bold; font-size:11px; border:2px solid #facc15; box-shadow:0 4px 6px rgba(0,0,0,0.3); display:flex; align-items:center; gap:4px; transform:translate(-50%, -50%); white-space:nowrap;">
             <span>🔱</span>
-            <span>दुर्गा पंडाल (रौज़ा रोड)</span>
+            <span>माँ भगवती पंडाल (कम्पनी सराय, रौज़ा रोड)</span>
           </div>
         `,
-        iconSize: [120, 30],
-        iconAnchor: [60, 15],
+        iconSize: [220, 30],
+        iconAnchor: [110, 15],
       });
 
       L.marker([SASARAM_ROUZA_ROAD_COORDS.lat, SASARAM_ROUZA_ROAD_COORDS.lng], { icon: pandalIcon })
         .addTo(map)
         .bindPopup(`
           <div style="font-family:sans-serif; padding:4px;">
-            <b style="color:#b91c1c;">श्री दुर्गा पूजा समिति पंडाल</b><br/>
-            <span style="font-size:12px; color:#4b5563;">मुख्य पंडाल एवं संग्रह केंद्र, रौज़ा रोड, सासाराम</span>
+            <b style="color:#b91c1c;">माँ भगवती पूजन कला संघ (ESTD-2001)</b><br/>
+            <span style="font-size:12px; color:#4b5563;">मुख्य पंडाल एवं संग्रह केंद्र, कम्पनी सराय, रौज़ा रोड, सासाराम</span><br/>
+            <span style="font-size:11px; color:#b45309; font-weight:bold;">दशमी को लंगर में आप सादर आमंत्रित हैं।</span>
           </div>
         `);
 

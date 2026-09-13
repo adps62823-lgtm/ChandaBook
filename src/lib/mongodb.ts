@@ -1,6 +1,14 @@
 import { MongoClient, Db, ObjectId } from 'mongodb';
+import dns from 'dns';
 import { ChandaEntry } from './types';
 import { SASARAM_ROUZA_ROAD_COORDS } from './defaultUsers';
+
+// Configure robust DNS resolution for MongoDB Atlas SRV queries
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch {
+  // Ignore in restricted sandboxes
+}
 
 const uri = process.env.MONGODB_URI || '';
 const options = {};
@@ -29,19 +37,24 @@ export async function getDb(): Promise<Db | null> {
     return null;
   }
 
-  if (process.env.NODE_ENV === 'development') {
-    if (!global._mongoClientPromise) {
+  try {
+    if (process.env.NODE_ENV === 'development') {
+      if (!global._mongoClientPromise) {
+        client = new MongoClient(uri, options);
+        global._mongoClientPromise = client.connect();
+      }
+      clientPromise = global._mongoClientPromise;
+    } else {
       client = new MongoClient(uri, options);
-      global._mongoClientPromise = client.connect();
+      clientPromise = client.connect();
     }
-    clientPromise = global._mongoClientPromise;
-  } else {
-    client = new MongoClient(uri, options);
-    clientPromise = client.connect();
-  }
 
-  const connectedClient = await clientPromise;
-  return connectedClient.db('durga_puja_chanda_sasaram');
+    const connectedClient = await clientPromise;
+    return connectedClient.db('durga_puja_chanda_sasaram');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    return null;
+  }
 }
 
 // Retrieve stored collections from MongoDB or fallback clean store
@@ -81,7 +94,7 @@ export async function getStoredCollections(): Promise<ChandaEntry[]> {
 export async function insertStoredCollection(entry: Omit<ChandaEntry, '_id' | 'receiptNo' | 'createdAt'>): Promise<ChandaEntry> {
   const count = (await getStoredCollections()).length;
   const seqNumber = String(count + 1).padStart(4, '0');
-  const receiptNo = `DP-RR-${new Date().getFullYear()}-${seqNumber}`;
+  const receiptNo = `MBPKS-2024-${seqNumber}`;
   const createdAt = new Date().toISOString();
 
   const newEntry: ChandaEntry = {

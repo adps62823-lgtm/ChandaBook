@@ -27,20 +27,34 @@ export const DEFAULT_COLLECTORS: CollectorUser[] = [
   },
 ];
 
-// Sasaram Rouza Road Default Geographical Coordinates
+export const COMMITTEE_INFO = {
+  name: 'माँ भगवती पूजन कला संघ',
+  subtitle: 'कम्पनी सराय, रौजा रोड, सासाराम',
+  district: 'रोहतास, बिहार',
+  pincode: '821115',
+  estd: '2001',
+  welcomeText: 'आपका हार्दिक अभिनन्दन करता है',
+  langarNotice: 'दशमी को लंगर में आप सादर आमंत्रित हैं।',
+  logoUrl: '/images/puja-logo.jpg',
+  bannerUrl: '/images/puja-banner.jpg',
+  defaultUpiId: 'bhagwati.sasaram@upi',
+};
+
+// Company Sarai, Rouza Road, Sasaram coordinates
 export const SASARAM_ROUZA_ROAD_COORDS = {
   lat: 24.9536,
   lng: 84.0278,
 };
 
 export const ROUZA_ROAD_LANDMARKS = [
-  'Near Rouza Sharif / Gate',
-  'Rouza Road Chowk',
-  'G.T. Road Turn / Mor',
-  'SP Jain College Road Crossing',
-  'Dharmshala Road Junction',
-  'Main Market Rouza Bazar',
-  'Kachari Road Link',
-  'Fazalganj Turning',
-  'Maa Durga Mandap Parisar (Pandal)',
+  'कम्पनी सराय (Company Sarai) - मुख्य पंडाल स्थल',
+  'रौज़ा शरीफ / गेट के पास (Near Rouza Sharif Gate)',
+  'रौज़ा रोड चौक (Rouza Road Chowk)',
+  'जी.टी. रोड मोड़ (G.T. Road Turn / Mor)',
+  'एस.पी. जैन कॉलेज रोड क्रॉसिंग (SP Jain College Crossing)',
+  'धर्मशाला रोड जंक्शन (Dharmshala Road Junction)',
+  'मुख्य बाज़ार रौज़ा बाज़ार (Main Market Rouza Bazar)',
+  'कचेहरी रोड लिंक (Kachari Road Link)',
+  'फज़लगंज मोड़ (Fazalganj Turning)',
+  'माँ भगवती मंडप परिसर (Mandap Parisar)',
 ];

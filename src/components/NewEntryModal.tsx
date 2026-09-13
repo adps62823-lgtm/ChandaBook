@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { CollectorUser, ChandaEntry } from '@/lib/types';
-import { ROUZA_ROAD_LANDMARKS, SASARAM_ROUZA_ROAD_COORDS } from '@/lib/defaultUsers';
+import { ROUZA_ROAD_LANDMARKS, SASARAM_ROUZA_ROAD_COORDS, COMMITTEE_INFO } from '@/lib/defaultUsers';
 import {
   X,
   MapPin,
@@ -17,8 +17,11 @@ import {
   User,
   Home,
   FileText,
+  Copy,
+  Check,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import Image from 'next/image';
 
 interface NewEntryModalProps {
   isOpen: boolean;
@@ -46,13 +49,21 @@ export default function NewEntryModal({
     lat: SASARAM_ROUZA_ROAD_COORDS.lat + (Math.random() - 0.5) * 0.003,
     lng: SASARAM_ROUZA_ROAD_COORDS.lng + (Math.random() - 0.5) * 0.003,
   });
-  const [locationStatus, setLocationStatus] = useState<string>('📍 रौज़ा रोड सासाराम डिफॉल्ट');
+  const [locationStatus, setLocationStatus] = useState<string>('📍 कम्पनी सराय, रौज़ा रोड डिफॉल्ट');
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showQrModal, setShowQrModal] = useState(false);
+  const [upiId, setUpiId] = useState(COMMITTEE_INFO.defaultUpiId);
+  const [copiedUpi, setCopiedUpi] = useState(false);
 
   if (!isOpen) return null;
+
+  const handleCopyUpi = () => {
+    navigator.clipboard.writeText(upiId);
+    setCopiedUpi(true);
+    setTimeout(() => setCopiedUpi(false), 2500);
+  };
 
   const handleGetCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -72,7 +83,7 @@ export default function NewEntryModal({
       },
       (err) => {
         console.warn('Geolocation error:', err);
-        setLocationStatus('GPS नहीं मिला, रौज़ा रोड स्थान प्रयुक्त');
+        setLocationStatus('GPS नहीं मिला, कम्पनी सराय स्थान प्रयुक्त');
       },
       { enableHighAccuracy: true, timeout: 8000 }
     );
@@ -101,7 +112,7 @@ export default function NewEntryModal({
         paymentMode,
         transactionId: paymentMode === 'UPI' ? transactionId.trim() : '',
         landmark,
-        address: address.trim() || `${landmark}, रौज़ा रोड सासाराम`,
+        address: address.trim() || `${landmark}, सासाराम`,
         location: coords,
         collectedBy: {
           id: currentUser.id,
@@ -146,21 +157,32 @@ export default function NewEntryModal({
     }
   };
 
+  const dynamicQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
+    `upi://pay?pa=${upiId}&pn=${encodeURIComponent(COMMITTEE_INFO.name)}${
+      amount && Number(amount) > 0 ? `&am=${amount}` : ''
+    }&cu=INR`
+  )}`;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-900/80 backdrop-blur-sm animate-fadeIn">
       <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border-2 border-amber-500 max-h-[92vh] flex flex-col">
         {/* Modal Top Header */}
-        <div className="bg-gradient-to-r from-red-700 via-amber-700 to-red-800 text-white px-5 py-4 flex items-center justify-between shadow-md">
+        <div className="bg-gradient-to-r from-red-800 via-amber-700 to-red-900 text-white px-5 py-3.5 flex items-center justify-between shadow-md">
           <div className="flex items-center gap-2.5">
-            <span className="text-2xl" role="img" aria-label="Diya">
-              🪔
-            </span>
+            <div className="relative w-10 h-10 rounded-full border-2 border-amber-300 overflow-hidden shrink-0 bg-white">
+              <Image
+                src={COMMITTEE_INFO.logoUrl}
+                alt="Logo"
+                fill
+                className="object-cover"
+              />
+            </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-amber-100 leading-tight">
                 नया चंदा रसीद काटें (Log Collection)
               </h2>
-              <p className="text-[11px] text-amber-200/90">
-                रौज़ा रोड दुर्गा पूजा पंडाल, सासाराम
+              <p className="text-[11px] text-amber-200/90 font-medium">
+                {COMMITTEE_INFO.name} • {COMMITTEE_INFO.subtitle}
               </p>
             </div>
           </div>
@@ -313,9 +335,9 @@ export default function NewEntryModal({
             </div>
 
             {paymentMode === 'UPI' && (
-              <div className="mt-2.5 p-3 bg-blue-50/70 border border-blue-200 rounded-xl space-y-2">
+              <div className="mt-2.5 p-3 bg-blue-50/70 border border-blue-200 rounded-xl space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-semibold text-blue-900">
+                  <span className="text-[11px] font-bold text-blue-900">
                     UPI संदर्भ संख्या (Ref / UTR / Txn ID)
                   </span>
                   <button
@@ -324,7 +346,7 @@ export default function NewEntryModal({
                     className="text-[11px] text-blue-700 hover:text-blue-900 font-bold underline flex items-center gap-1"
                   >
                     <QrCode className="w-3.5 h-3.5" />
-                    {showQrModal ? 'QR छुपाएं' : 'पंडाल का QR दिखाएं'}
+                    {showQrModal ? 'QR छुपाएं' : 'पंडाल का QR कोड दिखाएं'}
                   </button>
                 </div>
 
@@ -332,25 +354,56 @@ export default function NewEntryModal({
                   type="text"
                   value={transactionId}
                   onChange={(e) => setTransactionId(e.target.value)}
-                  placeholder="उदा. UTR / Txn Ref ID"
+                  placeholder="उदा. UTR: 428198765432 या PhonePe/GPay ID"
                   className="w-full px-3 py-1.5 text-xs border border-blue-300 rounded-lg bg-white outline-none focus:ring-1 focus:ring-blue-500"
                 />
 
                 {showQrModal && (
-                  <div className="p-3 bg-white rounded-lg border border-blue-300 text-center animate-fadeIn">
-                    <p className="text-xs font-bold text-stone-800 mb-1">
-                      श्री दुर्गा पूजा समिति, रौज़ा रोड सासाराम
-                    </p>
-                    <div className="inline-block p-2 bg-white border-2 border-stone-800 rounded-lg">
+                  <div className="p-3 bg-white rounded-xl border border-blue-300 text-center animate-fadeIn shadow-sm">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <div className="relative w-7 h-7 rounded-full overflow-hidden border border-amber-500">
+                        <Image src={COMMITTEE_INFO.logoUrl} alt="Logo" fill className="object-cover" />
+                      </div>
+                      <p className="text-xs font-bold text-stone-800">
+                        {COMMITTEE_INFO.name}
+                      </p>
+                    </div>
+
+                    <div className="inline-block p-2 bg-white border-2 border-stone-800 rounded-xl shadow-md">
                       <img
-                        src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=durga.puja.sasaram@upi%26pn=Durga%20Puja%20Rouza%20Road%20Sasaram"
-                        alt="Puja Samiti UPI QR"
-                        className="w-36 h-36 mx-auto"
+                        src={dynamicQrUrl}
+                        alt="समिति UPI QR कोड"
+                        className="w-44 h-44 mx-auto rounded"
                       />
                     </div>
-                    <p className="text-[10px] text-stone-500 mt-1">
-                      UPI ID: <span className="font-mono font-bold">durga.puja.sasaram@upi</span>
-                    </p>
+
+                    <div className="mt-2 text-center">
+                      <p className="text-[11px] font-semibold text-stone-600 mb-1">
+                        स्कैन करें या UPI ID पर भुगतान करें:
+                      </p>
+                      <div className="flex items-center justify-center gap-1.5 bg-stone-100 px-2.5 py-1 rounded-lg border border-stone-200 max-w-xs mx-auto">
+                        <input
+                          type="text"
+                          value={upiId}
+                          onChange={(e) => setUpiId(e.target.value)}
+                          className="text-xs font-mono font-bold text-stone-800 bg-transparent outline-none flex-1 text-center"
+                          placeholder="अपनी UPI ID दर्ज करें"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleCopyUpi}
+                          className="p-1 text-stone-600 hover:text-stone-900 rounded"
+                          title="UPI ID कॉपी करें"
+                        >
+                          {copiedUpi ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                      {copiedUpi && (
+                        <span className="text-[10px] text-emerald-600 font-bold mt-0.5 inline-block">
+                          ✓ UPI ID कॉपी हो गई!
+                        </span>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
@@ -360,12 +413,12 @@ export default function NewEntryModal({
           {/* Rouza Road Landmark & Address */}
           <div>
             <label className="block text-xs font-bold text-stone-700 mb-1">
-              रौज़ा रोड प्रमुख स्थल (Rouza Road Landmark)
+              स्थान / प्रमुख स्थल (Landmark)
             </label>
             <select
               value={landmark}
               onChange={(e) => setLandmark(e.target.value)}
-              className="w-full px-3 py-2 text-xs sm:text-sm border border-stone-300 rounded-xl bg-stone-50 focus:ring-2 focus:ring-red-500 outline-none mb-2"
+              className="w-full px-3 py-2 text-xs sm:text-sm border border-stone-300 rounded-xl bg-stone-50 focus:ring-2 focus:ring-red-500 outline-none mb-2 font-medium"
             >
               {ROUZA_ROAD_LANDMARKS.map((lm) => (
                 <option key={lm} value={lm}>
@@ -382,7 +435,7 @@ export default function NewEntryModal({
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="दुकान/मकान सं०, गली, या विस्तृत पता"
+                placeholder="दुकान/मकान सं०, कम्पनी सराय, रौज़ा रोड"
                 className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
               />
             </div>
@@ -428,7 +481,7 @@ export default function NewEntryModal({
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="उदा. भोग, आरती, दीपदान, पंडाल व्यवस्था"
+                placeholder="उदा. भोग, आरती, दीपदान, लंगर सेवा"
                 className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
               />
             </div>
@@ -439,7 +492,7 @@ export default function NewEntryModal({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-red-600 via-amber-600 to-red-700 hover:from-red-700 hover:to-amber-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 text-sm"
+              className="w-full py-3 px-4 bg-gradient-to-r from-red-700 via-amber-700 to-red-800 hover:from-red-800 hover:to-amber-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 text-sm"
             >
               <CheckCircle className="w-5 h-5" />
               <span>{loading ? 'रसीद तैयार हो रही है...' : 'चंदा सुरक्षित करें एवं रसीद काटें'}</span>

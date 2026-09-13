@@ -2,7 +2,9 @@
 
 import React from 'react';
 import { ChandaEntry } from '@/lib/types';
+import { COMMITTEE_INFO } from '@/lib/defaultUsers';
 import { Printer, Share2, X, CheckCircle2, MapPin, Calendar, UserCheck, Trash2 } from 'lucide-react';
+import Image from 'next/image';
 
 interface ReceiptModalProps {
   entry: ChandaEntry | null;
@@ -26,7 +28,8 @@ export default function ReceiptModal({ entry, onClose, onDeleteEntry }: ReceiptM
   };
 
   const handleWhatsAppShare = () => {
-    const text = `🔱 *श्री दुर्गा पूजा समिति, रौज़ा रोड सासाराम* 🔱\n` +
+    const text = `🔱 *${COMMITTEE_INFO.name}* 🔱\n` +
+      `*${COMMITTEE_INFO.subtitle} (स्था० २००१)*\n` +
       `*डिजिटल चंदा रसीद (Donation Receipt)*\n` +
       `--------------------------------\n` +
       `📜 *रसीद संख्या*: ${entry.receiptNo}\n` +
@@ -37,8 +40,9 @@ export default function ReceiptModal({ entry, onClose, onDeleteEntry }: ReceiptM
       `📅 *दिनांक*: ${formattedDate}\n` +
       `✍️ *संग्रहकर्ता*: ${entry.collectedBy.name}\n` +
       `--------------------------------\n` +
-      `माँ दुर्गा आप और आपके परिवार पर सदैव कृपा बनाए रखें! 🙏✨\n` +
-      `_रौज़ा रोड दुर्गा पूजा पंडाल, सासाराम (रोहतास)_`;
+      `*${COMMITTEE_INFO.langarNotice}*\n` +
+      `माँ भगवती आप और आपके परिवार पर सदैव कृपा बनाए रखें! 🙏✨\n` +
+      `_${COMMITTEE_INFO.name}, सासाराम (रोहतास)_`;
 
     const encoded = encodeURIComponent(text);
     const phoneClean = entry.phone ? entry.phone.replace(/\D/g, '') : '';
@@ -70,30 +74,47 @@ export default function ReceiptModal({ entry, onClose, onDeleteEntry }: ReceiptM
         <div className="p-4 sm:p-6 overflow-y-auto" id="printable-receipt">
           <div className="border-4 border-double border-red-800 p-5 sm:p-6 bg-gradient-to-b from-amber-50/40 via-white to-red-50/20 rounded-xl relative">
             {/* Watermark Logo in center */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-              <span className="text-9xl select-none" role="img" aria-label="Watermark">
-                🔱
-              </span>
+            <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+              <div className="relative w-72 h-72">
+                <Image
+                  src={COMMITTEE_INFO.logoUrl}
+                  alt="Watermark Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
             </div>
 
-            {/* Puja Header */}
-            <div className="text-center border-b-2 border-red-800 pb-4">
-              <p className="text-xs font-bold text-red-800 tracking-widest uppercase">
-                ॥ श्री गणेशाय नमः ॥ || ॥ जय माँ दुर्गे ॥
-              </p>
-              <h2 className="text-xl sm:text-2xl font-black text-red-900 tracking-tight mt-1">
-                श्री दुर्गा पूजा समिति
-              </h2>
-              <p className="text-sm font-bold text-amber-800">
-                रौज़ा रोड, सासाराम (रोहतास), बिहार - 821115
-              </p>
-              <p className="text-[11px] text-stone-600 italic mt-0.5">
-                भव्य दुर्गा पूजा एवं सांस्कृतिक महोत्सव • चंदा प्राप्ति रसीद
+            {/* Puja Header with Official Logo */}
+            <div className="text-center border-b-2 border-red-800 pb-4 relative z-10">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <div className="relative w-14 h-14 rounded-full border-2 border-amber-500 overflow-hidden shadow-sm shrink-0 bg-white">
+                  <Image
+                    src={COMMITTEE_INFO.logoUrl}
+                    alt="Logo"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="text-left sm:text-center">
+                  <p className="text-[11px] font-bold text-red-800 tracking-widest uppercase">
+                    ॥ श्री गणेशाय नमः ॥ || ॥ स्थापित सन् २००१ ॥
+                  </p>
+                  <h2 className="text-xl sm:text-2xl font-black text-red-900 tracking-tight leading-tight">
+                    {COMMITTEE_INFO.name}
+                  </h2>
+                  <p className="text-xs sm:text-sm font-bold text-amber-900">
+                    {COMMITTEE_INFO.subtitle} (रोहतास) बिहार - 821115
+                  </p>
+                </div>
+              </div>
+              <p className="text-[11px] text-stone-600 font-medium italic mt-1 bg-amber-100/60 inline-block px-3 py-0.5 rounded-full border border-amber-300/50">
+                {COMMITTEE_INFO.langarNotice}
               </p>
             </div>
 
             {/* Receipt Meta (No. & Date) */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs font-semibold py-3 border-b border-stone-200 gap-1 text-stone-700">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs font-semibold py-3 border-b border-stone-200 gap-1 text-stone-700 relative z-10">
               <div>
                 रसीद सं० (Receipt No):{' '}
                 <span className="font-mono text-red-700 font-bold text-sm bg-red-50 px-2 py-0.5 rounded border border-red-200">
@@ -107,7 +128,7 @@ export default function ReceiptModal({ entry, onClose, onDeleteEntry }: ReceiptM
             </div>
 
             {/* Donor Details Table */}
-            <div className="py-4 space-y-3 text-sm text-stone-800">
+            <div className="py-4 space-y-3 text-sm text-stone-800 relative z-10">
               <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
                 <span className="font-bold text-stone-700 min-w-[140px]">
                   सधन्यवाद प्राप्त किया :
@@ -161,7 +182,7 @@ export default function ReceiptModal({ entry, onClose, onDeleteEntry }: ReceiptM
             </div>
 
             {/* Amount Box */}
-            <div className="bg-red-50/80 border-2 border-red-700/50 rounded-xl p-3 sm:p-4 my-2 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div className="bg-red-50/90 border-2 border-red-700/50 rounded-xl p-3 sm:p-4 my-2 flex flex-col sm:flex-row items-center justify-between gap-2 relative z-10">
               <div>
                 <span className="text-xs font-bold text-red-800 uppercase tracking-wide">
                   प्राप्त सहयोग राशि (Amount Received)
@@ -178,10 +199,10 @@ export default function ReceiptModal({ entry, onClose, onDeleteEntry }: ReceiptM
             </div>
 
             {/* Collector Tag & Seal */}
-            <div className="pt-4 mt-4 border-t border-stone-200 flex justify-between items-end text-xs">
+            <div className="pt-4 mt-4 border-t border-stone-200 flex justify-between items-end text-xs relative z-10">
               <div className="text-left">
                 <p className="text-[11px] text-stone-500">
-                  संग्रहकर्ता हस्ताक्षर / टैग (Collector Tag):
+                  संग्रहकर्ता टैग (Collector Tag):
                 </p>
                 <div className="flex items-center gap-1.5 mt-1 font-bold text-stone-900">
                   <UserCheck className="w-4 h-4 text-emerald-600" />
@@ -191,17 +212,17 @@ export default function ReceiptModal({ entry, onClose, onDeleteEntry }: ReceiptM
 
               <div className="text-right">
                 <div className="h-10 flex items-end justify-end">
-                  <span className="text-[11px] font-mono text-red-700 border-b border-stone-800 pb-0.5">
-                    रौज़ा रोड पूजा समिति
+                  <span className="text-[11px] font-mono text-red-700 border-b border-stone-800 pb-0.5 font-bold">
+                    माँ भगवती पूजन कला संघ
                   </span>
                 </div>
                 <p className="text-[10px] text-stone-400 mt-0.5">
-                  अधिकृत हस्ताक्षरकर्ता
+                  कम्पनी सराय, सासाराम
                 </p>
               </div>
             </div>
 
-            <div className="text-center mt-4 pt-2 border-t border-dotted border-stone-300 text-[10px] text-stone-500">
+            <div className="text-center mt-4 pt-2 border-t border-dotted border-stone-300 text-[10px] text-stone-500 relative z-10">
               माँ जगदम्बे आपके परिवार को सुख, शांति एवं समृद्धि प्रदान करें! 🙏
             </div>
           </div>
