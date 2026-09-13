@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { ChandaEntry } from '@/lib/types';
-import { SASARAM_ROUZA_ROAD_COORDS } from '@/lib/defaultUsers';
-import { MapPin, Navigation, Eye, IndianRupee, Layers } from 'lucide-react';
+import { SASARAM_ROUZA_ROAD_COORDS, DEFAULT_COLLECTORS } from '@/lib/defaultUsers';
+import { MapPin, Navigation, Layers } from 'lucide-react';
 import type { Map as LeafletMap, LayerGroup } from 'leaflet';
 
 interface MapViewProps {
@@ -12,7 +12,7 @@ interface MapViewProps {
   onOpenNewEntryWithCoords?: (coords: { lat: number; lng: number }) => void;
 }
 
-export default function MapView({ entries, onSelectEntry, onOpenNewEntryWithCoords }: MapViewProps) {
+export default function MapView({ entries, onSelectEntry }: MapViewProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<LeafletMap | null>(null);
   const markersGroupRef = useRef<LayerGroup | null>(null);
@@ -48,9 +48,9 @@ export default function MapView({ entries, onSelectEntry, onOpenNewEntryWithCoor
         scrollWheelZoom: true,
       });
 
-      // Free OpenStreetMap Tiles
+      // Free OpenStreetMap Tiles (100% Free, no API key needed)
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Sasaram Rouza Road Puja',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | Sasaram Rouza Road',
         maxZoom: 19,
       }).addTo(map);
 
@@ -202,11 +202,6 @@ export default function MapView({ entries, onSelectEntry, onOpenNewEntryWithCoor
     );
   };
 
-  // Extract unique collectors from entries
-  const uniqueCollectors = Array.from(
-    new Set(entries.map((e) => JSON.stringify({ id: e.collectedBy.id, name: e.collectedBy.name })))
-  ).map((str) => JSON.parse(str));
-
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden flex flex-col h-[650px] relative">
       {/* Top Map Control Bar */}
@@ -233,8 +228,8 @@ export default function MapView({ entries, onSelectEntry, onOpenNewEntryWithCoor
             onChange={(e) => setSelectedCollectorFilter(e.target.value)}
             className="px-2.5 py-1.5 bg-white border border-stone-300 rounded-lg text-stone-700 font-medium outline-none focus:ring-1 focus:ring-red-500"
           >
-            <option value="all">सभी संग्रहकर्ता (All)</option>
-            {uniqueCollectors.map((c) => (
+            <option value="all">सभी उपयोगकर्ता (All Users)</option>
+            {DEFAULT_COLLECTORS.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
               </option>

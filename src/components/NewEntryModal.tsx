@@ -106,7 +106,6 @@ export default function NewEntryModal({
         collectedBy: {
           id: currentUser.id,
           name: currentUser.name,
-          role: currentUser.role,
         },
         notes: notes.trim(),
       };
@@ -188,9 +187,6 @@ export default function NewEntryModal({
               <UserCheck className="w-4 h-4 text-amber-700 shrink-0" />
               <span className="text-stone-600">संग्रहकर्ता टैग:</span>
               <span className="font-bold text-stone-900">{currentUser.name}</span>
-              <span className="text-[10px] bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded font-medium">
-                {currentUser.role}
-              </span>
             </div>
             <span className="text-[10px] text-emerald-700 font-semibold flex items-center gap-1">
               <CheckCircle className="w-3 h-3 inline" />
@@ -213,7 +209,7 @@ export default function NewEntryModal({
                   required
                   value={donorName}
                   onChange={(e) => setDonorName(e.target.value)}
-                  placeholder="उदा. मनोज कुमार वर्मा"
+                  placeholder="दाता का नाम लिखें"
                   className="w-full pl-9 pr-3 py-2 text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
                 />
               </div>
@@ -336,7 +332,7 @@ export default function NewEntryModal({
                   type="text"
                   value={transactionId}
                   onChange={(e) => setTransactionId(e.target.value)}
-                  placeholder="उदा. UTR: 428198765432 या PhonePe/GPay ID"
+                  placeholder="उदा. UTR / Txn Ref ID"
                   className="w-full px-3 py-1.5 text-xs border border-blue-300 rounded-lg bg-white outline-none focus:ring-1 focus:ring-blue-500"
                 />
 
@@ -346,7 +342,6 @@ export default function NewEntryModal({
                       श्री दुर्गा पूजा समिति, रौज़ा रोड सासाराम
                     </p>
                     <div className="inline-block p-2 bg-white border-2 border-stone-800 rounded-lg">
-                      {/* Generates a scan-ready committee QR code image using free static QR generator */}
                       <img
                         src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=durga.puja.sasaram@upi%26pn=Durga%20Puja%20Rouza%20Road%20Sasaram"
                         alt="Puja Samiti UPI QR"
@@ -433,7 +428,7 @@ export default function NewEntryModal({
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="उदा. भोग प्रसाद, आरती, दीपदान, पंडाल सजावट"
+                placeholder="उदा. भोग, आरती, दीपदान, पंडाल व्यवस्था"
                 className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
               />
             </div>

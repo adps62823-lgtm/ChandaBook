@@ -65,14 +65,14 @@ export default function Header({
                   <div
                     className={`w-7 h-7 rounded-full ${currentUser.avatarColor || 'bg-amber-600'} text-white font-bold flex items-center justify-center text-xs shadow-inner mr-2`}
                   >
-                    {currentUser.name.charAt(0)}
+                    {currentUser.name.replace('User ', 'U')}
                   </div>
                   <div className="text-left mr-2">
                     <p className="text-xs font-bold leading-tight text-amber-100">
                       {currentUser.name}
                     </p>
                     <p className="text-[10px] text-amber-300/80 leading-tight">
-                      {currentUser.role}
+                      अधिकृत सदस्य
                     </p>
                   </div>
                   <button
@@ -98,7 +98,7 @@ export default function Header({
                 className="inline-flex items-center gap-1.5 bg-amber-400 hover:bg-amber-300 text-stone-900 font-bold px-4 py-2 rounded-lg text-sm shadow-md transition-all"
               >
                 <ShieldCheck className="w-4 h-4" />
-                <span>टीम लॉगिन करें</span>
+                <span>लॉगिन करें</span>
               </button>
             )}
           </div>

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { CollectorUser } from '@/lib/types';
 import { DEFAULT_COLLECTORS } from '@/lib/defaultUsers';
-import { ShieldCheck, Lock, UserCheck, AlertCircle, Sparkles } from 'lucide-react';
+import { Lock, UserCheck, AlertCircle, Sparkles } from 'lucide-react';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -82,13 +82,13 @@ export default function LoginModal({
             </span>
           </div>
           <h2 className="text-xl font-bold text-amber-100">
-            संग्रहकर्ता टीम लॉगिन
+            संग्रहकर्ता लॉगिन (Collector Login)
           </h2>
           <p className="text-xs text-amber-200/90 mt-0.5">
-            रौज़ा रोड दुर्गा पूजा समिति, सासाराम • एक बार लॉगिन (Persistent Session)
+            रौज़ा रोड दुर्गा पूजा समिति, सासाराम • एक बार लॉगिन
           </p>
           <div className="mt-2 text-[11px] bg-amber-500/20 text-amber-100 py-1 px-3 rounded-full inline-block border border-amber-400/30">
-            🔒 लॉग आउट करने तक यह लॉगिन इसी फ़ोन/कंप्यूटर में सेव रहेगा
+            🔒 जब तक आप साइन आउट नहीं करेंगे, यह लॉगिन इस डिवाइस में सुरक्षित रहेगा
           </div>
         </div>
 
@@ -103,9 +103,9 @@ export default function LoginModal({
 
           <div>
             <label className="block text-xs font-semibold text-stone-700 mb-1.5 uppercase tracking-wide">
-              अपना नाम चुनें (Select Your Name)
+              उपयोगकर्ता चुनें (Select User)
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2.5">
               {DEFAULT_COLLECTORS.map((collector) => {
                 const isSelected = collector.id === selectedCollectorId;
                 return (
@@ -116,24 +116,19 @@ export default function LoginModal({
                       setSelectedCollectorId(collector.id);
                       setError('');
                     }}
-                    className={`flex flex-col text-left p-2.5 rounded-xl border transition-all ${
+                    className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
                       isSelected
                         ? 'border-red-600 bg-red-50/80 ring-2 ring-red-500/30 shadow-sm'
                         : 'border-stone-200 hover:border-amber-300 hover:bg-stone-50'
                     }`}
                   >
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`w-6 h-6 rounded-full ${collector.avatarColor} text-white text-[11px] font-bold flex items-center justify-center`}
-                      >
-                        {collector.name.charAt(0)}
-                      </div>
-                      <span className="text-xs font-bold text-stone-900 truncate">
-                        {collector.name}
-                      </span>
+                    <div
+                      className={`w-8 h-8 rounded-full ${collector.avatarColor} text-white text-xs font-bold flex items-center justify-center shrink-0 shadow-inner`}
+                    >
+                      {collector.name.replace('User ', 'U')}
                     </div>
-                    <span className="text-[10px] text-stone-500 mt-1 pl-8">
-                      {collector.role}
+                    <span className="text-sm font-bold text-stone-900">
+                      {collector.name}
                     </span>
                   </button>
                 );
@@ -154,7 +149,7 @@ export default function LoginModal({
                   className="text-[11px] text-amber-700 hover:text-amber-800 underline flex items-center gap-1 font-medium"
                 >
                   <Sparkles className="w-3 h-3" />
-                  पिन भरें (PIN: {selectedCollector.pin})
+                  पिन भरें ({selectedCollector.name} PIN: {selectedCollector.pin})
                 </button>
               )}
             </div>
@@ -183,7 +178,7 @@ export default function LoginModal({
               className="w-full py-3 px-4 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <UserCheck className="w-5 h-5" />
-              <span>{loading ? 'सत्यापित हो रहा है...' : 'लॉगिन करें (Start Collection)'}</span>
+              <span>{loading ? 'सत्यापित हो रहा है...' : 'लॉगिन करें (Sign In)'}</span>
             </button>
           </div>
 

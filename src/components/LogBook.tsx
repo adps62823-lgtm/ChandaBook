@@ -2,41 +2,28 @@
 
 import React, { useState, useMemo } from 'react';
 import { ChandaEntry } from '@/lib/types';
+import { DEFAULT_COLLECTORS } from '@/lib/defaultUsers';
 import {
   Search,
-  Download,
   Filter,
   Eye,
   Share2,
-  Calendar,
-  IndianRupee,
   UserCheck,
   MapPin,
   FileSpreadsheet,
-  ArrowUpDown,
 } from 'lucide-react';
 
 interface LogBookProps {
   entries: ChandaEntry[];
   onSelectEntry: (entry: ChandaEntry) => void;
+  onOpenNewEntry?: () => void;
 }
 
-export default function LogBook({ entries, onSelectEntry }: LogBookProps) {
+export default function LogBook({ entries, onSelectEntry, onOpenNewEntry }: LogBookProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [collectorFilter, setCollectorFilter] = useState('all');
   const [paymentFilter, setPaymentFilter] = useState('all');
   const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'amount-desc' | 'amount-asc'>('date-desc');
-
-  // Unique collectors for filter dropdown
-  const collectors = useMemo(() => {
-    const map = new Map<string, string>();
-    entries.forEach((e) => {
-      if (e.collectedBy?.id) {
-        map.set(e.collectedBy.id, e.collectedBy.name);
-      }
-    });
-    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
-  }, [entries]);
 
   // Filtered and sorted entries
   const filteredEntries = useMemo(() => {
@@ -97,6 +84,11 @@ export default function LogBook({ entries, onSelectEntry }: LogBookProps) {
 
   // Export to CSV for Excel & Committee records
   const exportToCSV = () => {
+    if (filteredEntries.length === 0) {
+      alert('निर्यात करने के लिए कोई डेटा उपलब्ध नहीं है (No data to export)');
+      return;
+    }
+
     const headers = [
       'रसीद संख्या',
       'दिनांक एवं समय',
@@ -107,8 +99,7 @@ export default function LogBook({ entries, onSelectEntry }: LogBookProps) {
       'UPI UTR/Txn ID',
       'पता / स्थान',
       'प्रमुख स्थल (Landmark)',
-      'संग्रहकर्ता का नाम (Collector)',
-      'संग्रहकर्ता पद (Role)',
+      'संग्रहकर्ता (Collector)',
       'विशेष विवरण',
     ];
 
@@ -122,8 +113,7 @@ export default function LogBook({ entries, onSelectEntry }: LogBookProps) {
       `"${e.transactionId || ''}"`,
       `"${e.address.replace(/"/g, '""')}"`,
       `"${e.landmark || ''}"`,
-      `"${e.collectedBy.name.replace(/"/g, '""')}"`,
-      `"${e.collectedBy.role}"`,
+      `"${e.collectedBy.name}"`,
       `"${(e.notes || '').replace(/"/g, '""')}"`,
     ]);
 
@@ -218,8 +208,8 @@ export default function LogBook({ entries, onSelectEntry }: LogBookProps) {
             onChange={(e) => setCollectorFilter(e.target.value)}
             className="text-xs px-2.5 py-1 rounded-lg border border-stone-300 bg-white text-stone-700 outline-none"
           >
-            <option value="all">सभी संग्रहकर्ता (All Volunteers)</option>
-            {collectors.map((c) => (
+            <option value="all">सभी उपयोगकर्ता (All Users)</option>
+            {DEFAULT_COLLECTORS.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
               </option>
@@ -275,13 +265,27 @@ export default function LogBook({ entries, onSelectEntry }: LogBookProps) {
       {/* Table & Card Views */}
       {filteredEntries.length === 0 ? (
         <div className="p-12 text-center text-stone-500">
-          <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center mx-auto mb-3 text-stone-400">
-            <Search className="w-6 h-6" />
+          <div className="w-14 h-14 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto mb-3 text-amber-700 text-2xl">
+            📖
           </div>
-          <p className="text-sm font-semibold">कोई प्रविष्टि नहीं मिली</p>
-          <p className="text-xs text-stone-400 mt-1">
-            सर्च कीवर्ड या फ़िल्टर बदलकर पुनः प्रयास करें
+          <p className="text-sm font-bold text-stone-800">
+            {entries.length === 0
+              ? 'बहीखाते में अभी कोई रसीद दर्ज नहीं है'
+              : 'दिए गए फ़िल्टर के अनुसार कोई प्रविष्टि नहीं मिली'}
           </p>
+          <p className="text-xs text-stone-400 mt-1 max-w-sm mx-auto">
+            {entries.length === 0
+              ? 'दुर्गा पूजा चंदा संग्रह शुरू करने के लिए ऊपर "+ नया चंदा" बटन दबाएं।'
+              : 'सर्च कीवर्ड या फ़िल्टर बदलकर पुनः प्रयास करें।'}
+          </p>
+          {entries.length === 0 && onOpenNewEntry && (
+            <button
+              onClick={onOpenNewEntry}
+              className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold rounded-xl text-xs shadow hover:scale-105 transition-all"
+            >
+              + पहला चंदा दर्ज करें
+            </button>
+          )}
         </div>
       ) : (
         <>
@@ -355,13 +359,10 @@ export default function LogBook({ entries, onSelectEntry }: LogBookProps) {
                     <td className="p-3 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <UserCheck className="w-3.5 h-3.5 text-amber-600" />
-                        <span className="font-semibold text-stone-800">
+                        <span className="font-bold text-stone-800">
                           {item.collectedBy.name}
                         </span>
                       </div>
-                      <span className="text-[10px] text-stone-400">
-                        {item.collectedBy.role}
-                      </span>
                     </td>
                     <td className="p-3 text-right whitespace-nowrap space-x-1.5">
                       <button
@@ -427,7 +428,7 @@ export default function LogBook({ entries, onSelectEntry }: LogBookProps) {
                 </div>
 
                 <div className="flex justify-between items-center text-[11px] text-stone-500 pt-1 border-t border-stone-100">
-                  <div className="flex items-center gap-1 font-medium text-stone-800">
+                  <div className="flex items-center gap-1 font-bold text-stone-800">
                     <UserCheck className="w-3 h-3 text-amber-600" />
                     <span>टैग: {item.collectedBy.name}</span>
                   </div>

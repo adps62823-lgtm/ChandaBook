@@ -15,7 +15,6 @@ import {
   BarChart3,
   PlusCircle,
   RefreshCw,
-  Sparkles,
   HeartHandshake,
   CheckCircle2,
 } from 'lucide-react';
@@ -151,10 +150,10 @@ export default function DashboardPage() {
             </span>
             <div>
               <p className="text-xs font-bold text-amber-900 tracking-wide uppercase">
-                माँ दुर्गा पूजा उत्सव २०२४-२६ • रौज़ा रोड सासाराम
+                माँ दुर्गा पूजा उत्सव • रौज़ा रोड सासाराम
               </p>
               <p className="text-xs text-stone-600">
-                चंदा संग्रह पारदर्शिता बहीखाता एवं रीयल-टाइम मानचित्र (Tagged with Active Volunteer)
+                चंदा संग्रह बहीखाता एवं रीयल-टाइम मानचित्र
               </p>
             </div>
           </div>
@@ -238,6 +237,13 @@ export default function DashboardPage() {
             <LogBook
               entries={entries}
               onSelectEntry={(entry) => setSelectedReceiptEntry(entry)}
+              onOpenNewEntry={() => {
+                if (!currentUser) {
+                  setIsLoginModalOpen(true);
+                } else {
+                  setIsNewEntryOpen(true);
+                }
+              }}
             />
           </div>
         )}
@@ -259,11 +265,11 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2 mb-4">
                 <HeartHandshake className="w-5 h-5 text-amber-600" />
                 <h3 className="text-base font-bold text-stone-900">
-                  संग्रह टीम उत्तरदायित्व एवं ऑडिट विवरण (Volunteer Audit Trail)
+                  संग्रह टीम उत्तरदायित्व एवं ऑडिट विवरण (Team Audit Trail)
                 </h3>
               </div>
               <p className="text-xs text-stone-600 mb-4 leading-relaxed">
-                प्रत्येक चंदा प्रविष्टि संग्रहकर्ता के अद्वितीय खाते से टैग है। यह समिति के वित्तीय बहीखाते
+                प्रत्येक चंदा प्रविष्टि संबंधित उपयोगकर्ता के खाते से टैग है। यह समिति के वित्तीय बहीखाते
                 में 100% पारदर्शिता सुनिश्चित करता है।
               </p>
 
@@ -271,8 +277,7 @@ export default function DashboardPage() {
                 <table className="w-full text-xs text-left border-collapse">
                   <thead>
                     <tr className="bg-stone-100 text-stone-600 border-b font-bold">
-                      <th className="p-3">सदस्य का नाम</th>
-                      <th className="p-3">पद (Role)</th>
+                      <th className="p-3">उपयोगकर्ता</th>
                       <th className="p-3 text-center">कुल रसीदें</th>
                       <th className="p-3 text-right">कुल संग्रह (₹)</th>
                       <th className="p-3 text-right">योगदान प्रतिशत</th>
@@ -287,9 +292,6 @@ export default function DashboardPage() {
                         <tr key={item.collectorId} className="hover:bg-amber-50/50">
                           <td className="p-3 font-bold text-stone-900">
                             {item.collectorName}
-                          </td>
-                          <td className="p-3 text-stone-500">
-                            {item.collectorId === 'user_vikash' ? 'Collection Lead' : 'Field Volunteer'}
                           </td>
                           <td className="p-3 text-center font-bold">
                             {item.count}

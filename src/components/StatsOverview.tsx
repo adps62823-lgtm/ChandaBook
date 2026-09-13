@@ -114,7 +114,7 @@ export default function StatsOverview({ stats }: StatsOverviewProps) {
               <Award className="w-4 h-4" />
             </div>
           </div>
-          {stats.collectorBreakdown && stats.collectorBreakdown.length > 0 ? (
+          {stats.collectorBreakdown && stats.collectorBreakdown.length > 0 && stats.totalAmount > 0 ? (
             <>
               <p className="text-sm font-bold text-stone-900 mt-2 truncate">
                 {stats.collectorBreakdown[0].collectorName}
@@ -124,7 +124,7 @@ export default function StatsOverview({ stats }: StatsOverviewProps) {
               </p>
             </>
           ) : (
-            <p className="text-xs text-stone-500 mt-2">संग्रह शुरू करें</p>
+            <p className="text-xs text-stone-500 mt-2">नया सत्र (सक्रिय)</p>
           )}
         </div>
       </div>
@@ -135,11 +135,11 @@ export default function StatsOverview({ stats }: StatsOverviewProps) {
           <div className="flex items-center gap-2">
             <Award className="w-4 h-4 text-amber-600" />
             <h3 className="text-xs font-bold text-stone-800 uppercase tracking-wider">
-              टीम संग्रह प्रगति (Team Leaderboard & Tagged Contributions)
+              टीम संग्रह प्रगति (Team Leaderboard)
             </h3>
           </div>
           <span className="text-[11px] text-stone-400">
-            प्रत्येक सदस्य द्वारा दर्ज कुल राशि
+            प्रत्येक उपयोगकर्ता द्वारा दर्ज कुल राशि
           </span>
         </div>
 

@@ -34,7 +34,7 @@ export default function ReceiptModal({ entry, onClose }: ReceiptModalProps) {
       `💳 *भुगतान माध्यम*: ${entry.paymentMode} ${entry.transactionId ? `(Txn: ${entry.transactionId})` : ''}\n` +
       `📍 *स्थान/पता*: ${entry.address}${entry.landmark ? ` (${entry.landmark})` : ''}\n` +
       `📅 *दिनांक*: ${formattedDate}\n` +
-      `✍️ *संग्रहकर्ता*: ${entry.collectedBy.name} (${entry.collectedBy.role})\n` +
+      `✍️ *संग्रहकर्ता*: ${entry.collectedBy.name}\n` +
       `--------------------------------\n` +
       `माँ दुर्गा आप और आपके परिवार पर सदैव कृपा बनाए रखें! 🙏✨\n` +
       `_रौज़ा रोड दुर्गा पूजा पंडाल, सासाराम (रोहतास)_`;
@@ -185,9 +185,6 @@ export default function ReceiptModal({ entry, onClose }: ReceiptModalProps) {
                 <div className="flex items-center gap-1.5 mt-1 font-bold text-stone-900">
                   <UserCheck className="w-4 h-4 text-emerald-600" />
                   <span>{entry.collectedBy.name}</span>
-                  <span className="text-stone-500 font-normal">
-                    ({entry.collectedBy.role})
-                  </span>
                 </div>
               </div>
 

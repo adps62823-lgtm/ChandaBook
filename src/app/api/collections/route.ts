@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getStoredCollections, insertStoredCollection, isMongoConfigured } from '@/lib/mongodb';
 import { CollectionStats } from '@/lib/types';
+import { DEFAULT_COLLECTORS } from '@/lib/defaultUsers';
 
 export async function GET() {
   try {
@@ -11,7 +12,12 @@ export async function GET() {
     let cashAmount = 0;
     let upiAmount = 0;
     let todayAmount = 0;
+
+    // Initialize all 4 users so the board is always complete
     const collectorMap = new Map<string, { collectorName: string; count: number; totalAmount: number }>();
+    DEFAULT_COLLECTORS.forEach((u) => {
+      collectorMap.set(u.id, { collectorName: u.name, count: 0, totalAmount: 0 });
+    });
 
     collections.forEach((item) => {
       const amt = Number(item.amount) || 0;
@@ -28,7 +34,7 @@ export async function GET() {
       }
 
       const cId = item.collectedBy?.id || 'unknown';
-      const cName = item.collectedBy?.name || 'Volunteer';
+      const cName = item.collectedBy?.name || 'User';
       const existing = collectorMap.get(cId) || { collectorName: cName, count: 0, totalAmount: 0 };
       existing.count += 1;
       existing.totalAmount += amt;
@@ -42,8 +48,8 @@ export async function GET() {
       totalAmount: data.totalAmount,
     }));
 
-    // Sort leaderboard by total collected desc
-    collectorBreakdown.sort((a, b) => b.totalAmount - a.totalAmount);
+    // Sort leaderboard by total collected desc, then by name
+    collectorBreakdown.sort((a, b) => b.totalAmount - a.totalAmount || a.collectorName.localeCompare(b.collectorName));
 
     const stats: CollectionStats = {
       totalAmount,
@@ -90,7 +96,10 @@ export async function POST(request: Request) {
       address: address.trim(),
       landmark: landmark || '',
       location: location || { lat: 24.9536, lng: 84.0278 },
-      collectedBy,
+      collectedBy: {
+        id: collectedBy.id,
+        name: collectedBy.name,
+      },
       notes: notes ? notes.trim() : '',
     });
 

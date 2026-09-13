@@ -2,13 +2,11 @@ import { NextResponse } from 'next/server';
 import { DEFAULT_COLLECTORS } from '@/lib/defaultUsers';
 
 export async function GET() {
-  // Return public collector profiles (without PIN)
-  const publicProfiles = DEFAULT_COLLECTORS.map(({ id, name, role, avatarColor, phone }) => ({
+  // Return public user list (without PIN)
+  const publicProfiles = DEFAULT_COLLECTORS.map(({ id, name, avatarColor }) => ({
     id,
     name,
-    role,
     avatarColor,
-    phone,
   }));
 
   return NextResponse.json({
@@ -23,7 +21,7 @@ export async function POST(request: Request) {
 
     if (!collectorId || !pin) {
       return NextResponse.json(
-        { success: false, error: 'Collector and 4-digit PIN required' },
+        { success: false, error: 'User selection and 4-digit PIN required' },
         { status: 400 }
       );
     }
@@ -32,7 +30,7 @@ export async function POST(request: Request) {
 
     if (!collector) {
       return NextResponse.json(
-        { success: false, error: 'Collector not found in committee list' },
+        { success: false, error: 'User not found in system' },
         { status: 404 }
       );
     }
@@ -48,8 +46,6 @@ export async function POST(request: Request) {
     const userSession = {
       id: collector.id,
       name: collector.name,
-      role: collector.role,
-      phone: collector.phone,
       avatarColor: collector.avatarColor,
     };
 

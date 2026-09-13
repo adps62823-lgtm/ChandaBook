@@ -1,10 +1,10 @@
 export interface CollectorUser {
   id: string;
   name: string;
-  phone: string;
-  role: string;
   pin: string;
   avatarColor: string;
+  phone?: string;
+  role?: string;
 }
 
 export interface ChandaEntry {
@@ -24,7 +24,7 @@ export interface ChandaEntry {
   collectedBy: {
     id: string;
     name: string;
-    role: string;
+    role?: string;
   };
   notes?: string;
   createdAt: string;
