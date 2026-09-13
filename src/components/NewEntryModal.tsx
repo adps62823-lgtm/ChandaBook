@@ -523,7 +523,7 @@ export default function NewEntryModal({
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="उदा. भोग, आरती, दीपदान, लंगर सेवा"
+                placeholder="उदा. भोग, आरती, दीपदान, प्रसाद सेवा"
                 className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
               />
             </div>

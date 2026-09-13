@@ -72,8 +72,7 @@ export default function MapView({ entries, onSelectEntry }: MapViewProps) {
         .bindPopup(`
           <div style="font-family:sans-serif; padding:4px;">
             <b style="color:#b91c1c;">माँ भगवती पूजन कला संघ (ESTD-2001)</b><br/>
-            <span style="font-size:12px; color:#4b5563;">मुख्य पंडाल एवं संग्रह केंद्र, कम्पनी सराय, रौज़ा रोड, सासाराम</span><br/>
-            <span style="font-size:11px; color:#b45309; font-weight:bold;">दशमी को लंगर में आप सादर आमंत्रित हैं।</span>
+            <span style="font-size:12px; color:#4b5563;">मुख्य पंडाल एवं संग्रह केंद्र, कम्पनी सराय, रौज़ा रोड, सासाराम</span>
           </div>
         `);
 

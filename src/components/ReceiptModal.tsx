@@ -40,7 +40,6 @@ export default function ReceiptModal({ entry, onClose, onDeleteEntry }: ReceiptM
       `📅 *दिनांक*: ${formattedDate}\n` +
       `✍️ *संग्रहकर्ता*: ${entry.collectedBy.name}\n` +
       `--------------------------------\n` +
-      `*${COMMITTEE_INFO.langarNotice}*\n` +
       `माँ भगवती आप और आपके परिवार पर सदैव कृपा बनाए रखें! 🙏✨\n` +
       `_${COMMITTEE_INFO.name}, सासाराम (रोहतास)_`;
 
@@ -108,9 +107,6 @@ export default function ReceiptModal({ entry, onClose, onDeleteEntry }: ReceiptM
                   </p>
                 </div>
               </div>
-              <p className="text-[11px] text-stone-600 font-medium italic mt-1 bg-amber-100/60 inline-block px-3 py-0.5 rounded-full border border-amber-300/50">
-                {COMMITTEE_INFO.langarNotice}
-              </p>
             </div>
 
             {/* Receipt Meta (No. & Date) */}

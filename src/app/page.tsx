@@ -198,18 +198,18 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Langar Notice & Action Bar */}
+          {/* Action & Info Bar */}
           <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-amber-200">
             <div className="flex items-center gap-2.5 text-center sm:text-left">
-              <span className="text-2xl animate-bounce" role="img" aria-label="Prasad / Langar">
-                🍲
+              <span className="text-2xl" role="img" aria-label="Puja Diya">
+                🪔
               </span>
               <div>
-                <p className="text-xs sm:text-sm font-bold text-red-900">
-                  {COMMITTEE_INFO.langarNotice}
+                <p className="text-xs sm:text-sm font-bold text-stone-800">
+                  डिजिटल चंदा बहीखाता एवं रसीद प्रबंधन
                 </p>
                 <p className="text-[11px] text-stone-600">
-                  चंदा संग्रह बहीखाता • 100% डिजिटल रसीद एवं GPS मानचित्र
+                  पारदर्शी संग्रह प्रणाली • 100% डिजिटल रसीद एवं GPS मानचित्र
                 </p>
               </div>
             </div>

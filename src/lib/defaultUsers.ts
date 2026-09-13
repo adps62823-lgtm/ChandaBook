@@ -34,7 +34,6 @@ export const COMMITTEE_INFO = {
   pincode: '821115',
   estd: '2001',
   welcomeText: 'आपका हार्दिक अभिनन्दन करता है',
-  langarNotice: 'दशमी को लंगर में आप सादर आमंत्रित हैं।',
   logoUrl: '/images/puja-logo.jpg',
   bannerUrl: '/images/puja-banner.jpg',
   qrCodeUrl: '/images/puja-qr.jpg',
