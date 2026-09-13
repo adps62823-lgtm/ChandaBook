@@ -55,6 +55,7 @@ export default function NewEntryModal({
   const [error, setError] = useState('');
   const [showQrModal, setShowQrModal] = useState(false);
   const [upiId, setUpiId] = useState(COMMITTEE_INFO.defaultUpiId);
+  const [qrViewMode, setQrViewMode] = useState<'official' | 'dynamic'>('official');
   const [copiedUpi, setCopiedUpi] = useState(false);
 
   if (!isOpen) return null;
@@ -360,47 +361,88 @@ export default function NewEntryModal({
 
                 {showQrModal && (
                   <div className="p-3 bg-white rounded-xl border border-blue-300 text-center animate-fadeIn shadow-sm">
+                    {/* Header */}
                     <div className="flex items-center justify-center gap-2 mb-2">
-                      <div className="relative w-7 h-7 rounded-full overflow-hidden border border-amber-500">
+                      <div className="relative w-7 h-7 rounded-full overflow-hidden border border-amber-500 shrink-0">
                         <Image src={COMMITTEE_INFO.logoUrl} alt="Logo" fill className="object-cover" />
                       </div>
-                      <p className="text-xs font-bold text-stone-800">
-                        {COMMITTEE_INFO.name}
-                      </p>
+                      <div>
+                        <p className="text-xs font-bold text-stone-800">
+                          {COMMITTEE_INFO.name}
+                        </p>
+                        <p className="text-[10px] text-stone-500 font-medium">
+                          {COMMITTEE_INFO.subtitle}
+                        </p>
+                      </div>
                     </div>
 
+                    {/* QR View Mode Tabs */}
+                    <div className="inline-flex p-0.5 bg-stone-100 rounded-lg mb-2 text-[11px] font-bold">
+                      <button
+                        type="button"
+                        onClick={() => setQrViewMode('official')}
+                        className={`px-2.5 py-1 rounded-md transition-all ${
+                          qrViewMode === 'official'
+                            ? 'bg-blue-600 text-white shadow-sm'
+                            : 'text-stone-600 hover:text-stone-900'
+                        }`}
+                      >
+                        🏛️ आधिकारिक SBI QR
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setQrViewMode('dynamic')}
+                        className={`px-2.5 py-1 rounded-md transition-all ${
+                          qrViewMode === 'dynamic'
+                            ? 'bg-blue-600 text-white shadow-sm'
+                            : 'text-stone-600 hover:text-stone-900'
+                        }`}
+                      >
+                        ⚡ ₹{amount || 0} राशि सहित QR
+                      </button>
+                    </div>
+
+                    {/* QR Image Box */}
                     <div className="inline-block p-2 bg-white border-2 border-stone-800 rounded-xl shadow-md">
-                      <img
-                        src={dynamicQrUrl}
-                        alt="समिति UPI QR कोड"
-                        className="w-44 h-44 mx-auto rounded"
-                      />
+                      {qrViewMode === 'official' ? (
+                        <div className="relative w-52 h-64 mx-auto rounded overflow-hidden">
+                          <Image
+                            src={COMMITTEE_INFO.qrCodeUrl}
+                            alt="समिति आधिकारिक UPI QR कोड (SCAN & PAY)"
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      ) : (
+                        <img
+                          src={dynamicQrUrl}
+                          alt="समिति डायनामिक UPI QR कोड"
+                          className="w-48 h-48 mx-auto rounded"
+                        />
+                      )}
                     </div>
 
-                    <div className="mt-2 text-center">
-                      <p className="text-[11px] font-semibold text-stone-600 mb-1">
-                        स्कैन करें या UPI ID पर भुगतान करें:
+                    {/* Official UPI ID beneath QR */}
+                    <div className="mt-2.5 text-center">
+                      <p className="text-[11px] font-bold text-stone-700 mb-1">
+                        आधिकारिक UPI ID:
                       </p>
-                      <div className="flex items-center justify-center gap-1.5 bg-stone-100 px-2.5 py-1 rounded-lg border border-stone-200 max-w-xs mx-auto">
-                        <input
-                          type="text"
-                          value={upiId}
-                          onChange={(e) => setUpiId(e.target.value)}
-                          className="text-xs font-mono font-bold text-stone-800 bg-transparent outline-none flex-1 text-center"
-                          placeholder="अपनी UPI ID दर्ज करें"
-                        />
+                      <div className="flex items-center justify-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-300 max-w-xs mx-auto">
+                        <span className="text-xs font-mono font-black text-amber-950 flex-1 text-center select-all">
+                          {upiId}
+                        </span>
                         <button
                           type="button"
                           onClick={handleCopyUpi}
-                          className="p-1 text-stone-600 hover:text-stone-900 rounded"
+                          className="p-1 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded transition-colors"
                           title="UPI ID कॉपी करें"
                         >
                           {copiedUpi ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                         </button>
                       </div>
                       {copiedUpi && (
-                        <span className="text-[10px] text-emerald-600 font-bold mt-0.5 inline-block">
-                          ✓ UPI ID कॉपी हो गई!
+                        <span className="text-[11px] text-emerald-600 font-bold mt-1 inline-block animate-fadeIn">
+                          ✓ UPI ID कॉपी हो गई! (PhonePe / GPay / Paytm में पेस्ट करें)
                         </span>
                       )}
                     </div>

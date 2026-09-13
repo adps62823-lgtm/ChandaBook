@@ -37,7 +37,8 @@ export const COMMITTEE_INFO = {
   langarNotice: 'दशमी को लंगर में आप सादर आमंत्रित हैं।',
   logoUrl: '/images/puja-logo.jpg',
   bannerUrl: '/images/puja-banner.jpg',
-  defaultUpiId: 'bhagwati.sasaram@upi',
+  qrCodeUrl: '/images/puja-qr.jpg',
+  defaultUpiId: 'maabhagwatipujankalasangh@sbi',
 };
 
 // Company Sarai, Rouza Road, Sasaram coordinates
