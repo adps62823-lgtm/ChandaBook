@@ -11,15 +11,22 @@ import {
   UserCheck,
   MapPin,
   FileSpreadsheet,
+  Trash2,
 } from 'lucide-react';
 
 interface LogBookProps {
   entries: ChandaEntry[];
   onSelectEntry: (entry: ChandaEntry) => void;
+  onDeleteEntry?: (id: string, receiptNo: string) => void;
   onOpenNewEntry?: () => void;
 }
 
-export default function LogBook({ entries, onSelectEntry, onOpenNewEntry }: LogBookProps) {
+export default function LogBook({
+  entries,
+  onSelectEntry,
+  onDeleteEntry,
+  onOpenNewEntry,
+}: LogBookProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [collectorFilter, setCollectorFilter] = useState('all');
   const [paymentFilter, setPaymentFilter] = useState('all');
@@ -149,6 +156,15 @@ export default function LogBook({ entries, onSelectEntry, onOpenNewEntry }: LogB
       : `https://wa.me/?text=${encoded}`;
 
     window.open(url, '_blank');
+  };
+
+  const handleDeletePrompt = (item: ChandaEntry) => {
+    const isConfirmed = window.confirm(
+      `⚠️ क्या आप सचमुच यह चंदा रसीद हटाना चाहते हैं?\n\nरसीद सं०: ${item.receiptNo}\nदाता: ${item.donorName}\nराशि: ₹${item.amount.toLocaleString('en-IN')}\n\nयह प्रविष्टि हमेशा के लिए मिट जाएगी।`
+    );
+    if (isConfirmed && onDeleteEntry) {
+      onDeleteEntry(item._id, item.receiptNo);
+    }
   };
 
   return (
@@ -384,6 +400,16 @@ export default function LogBook({ entries, onSelectEntry, onOpenNewEntry }: LogB
                         <Share2 className="w-3 h-3" />
                         <span>WA</span>
                       </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeletePrompt(item)}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-lg text-[11px] font-semibold transition-colors"
+                        title="रसीद हटाएं (Delete Entry)"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        <span>हटाएं</span>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -433,7 +459,7 @@ export default function LogBook({ entries, onSelectEntry, onOpenNewEntry }: LogB
                     <span>टैग: {item.collectedBy.name}</span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     <button
                       type="button"
                       onClick={() => onSelectEntry(item)}
@@ -446,7 +472,15 @@ export default function LogBook({ entries, onSelectEntry, onOpenNewEntry }: LogB
                       onClick={() => handleWhatsAppQuickShare(item)}
                       className="px-2.5 py-1 bg-emerald-600 text-white rounded-lg text-xs font-semibold"
                     >
-                      WhatsApp
+                      WA
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePrompt(item)}
+                      className="p-1 text-red-600 hover:bg-red-50 rounded-lg"
+                      title="हटाएं"
+                    >
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>

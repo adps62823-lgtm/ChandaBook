@@ -2,14 +2,15 @@
 
 import React from 'react';
 import { ChandaEntry } from '@/lib/types';
-import { Printer, Share2, X, CheckCircle2, MapPin, Calendar, UserCheck } from 'lucide-react';
+import { Printer, Share2, X, CheckCircle2, MapPin, Calendar, UserCheck, Trash2 } from 'lucide-react';
 
 interface ReceiptModalProps {
   entry: ChandaEntry | null;
   onClose: () => void;
+  onDeleteEntry?: (id: string, receiptNo: string) => void;
 }
 
-export default function ReceiptModal({ entry, onClose }: ReceiptModalProps) {
+export default function ReceiptModal({ entry, onClose, onDeleteEntry }: ReceiptModalProps) {
   if (!entry) return null;
 
   const formattedDate = new Date(entry.createdAt).toLocaleDateString('hi-IN', {
@@ -207,29 +208,53 @@ export default function ReceiptModal({ entry, onClose }: ReceiptModalProps) {
         </div>
 
         {/* Action Buttons (Hidden in Print) */}
-        <div className="no-print bg-stone-50 p-4 border-t border-stone-200 flex flex-wrap gap-2 justify-end">
-          <button
-            onClick={handlePrint}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-stone-800 hover:bg-stone-900 text-white font-semibold rounded-xl text-xs sm:text-sm shadow transition-colors"
-          >
-            <Printer className="w-4 h-4" />
-            <span>रसीद प्रिंट करें (Print)</span>
-          </button>
+        <div className="no-print bg-stone-50 p-4 border-t border-stone-200 flex flex-wrap gap-2 items-center justify-between">
+          <div>
+            {onDeleteEntry && (
+              <button
+                type="button"
+                onClick={() => {
+                  const isConfirmed = window.confirm(
+                    `⚠️ क्या आप सचमुच यह चंदा रसीद हटाना चाहते हैं?\n\nरसीद सं०: ${entry.receiptNo}\nदाता: ${entry.donorName}\nराशि: ₹${entry.amount.toLocaleString('en-IN')}`
+                  );
+                  if (isConfirmed) {
+                    onDeleteEntry(entry._id, entry.receiptNo);
+                    onClose();
+                  }
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs font-semibold transition-colors"
+                title="रसीद हटाएं"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>हटाएं (Delete)</span>
+              </button>
+            )}
+          </div>
 
-          <button
-            onClick={handleWhatsAppShare}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs sm:text-sm shadow transition-colors"
-          >
-            <Share2 className="w-4 h-4" />
-            <span>WhatsApp पर भेजें</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePrint}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-stone-800 hover:bg-stone-900 text-white font-semibold rounded-xl text-xs sm:text-sm shadow transition-colors"
+            >
+              <Printer className="w-4 h-4" />
+              <span>रसीद प्रिंट करें (Print)</span>
+            </button>
 
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-stone-200 hover:bg-stone-300 text-stone-700 font-semibold rounded-xl text-xs sm:text-sm transition-colors"
-          >
-            बन्द करें (Close)
-          </button>
+            <button
+              onClick={handleWhatsAppShare}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs sm:text-sm shadow transition-colors"
+            >
+              <Share2 className="w-4 h-4" />
+              <span>WhatsApp पर भेजें</span>
+            </button>
+
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-stone-200 hover:bg-stone-300 text-stone-700 font-semibold rounded-xl text-xs sm:text-sm transition-colors"
+            >
+              बन्द करें (Close)
+            </button>
+          </div>
         </div>
       </div>
     </div>

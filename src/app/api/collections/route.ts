@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getStoredCollections, insertStoredCollection, isMongoConfigured } from '@/lib/mongodb';
+import { getStoredCollections, insertStoredCollection, deleteStoredCollection, isMongoConfigured } from '@/lib/mongodb';
 import { CollectionStats } from '@/lib/types';
 import { DEFAULT_COLLECTORS } from '@/lib/defaultUsers';
 
@@ -112,6 +112,49 @@ export async function POST(request: Request) {
     console.error('Error recording collection:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to record collection' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const idParam = url.searchParams.get('id');
+    let id = idParam;
+
+    if (!id) {
+      try {
+        const body = await request.json();
+        id = body.id;
+      } catch {
+        // no body provided
+      }
+    }
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: 'Collection ID required for deletion' },
+        { status: 400 }
+      );
+    }
+
+    const deleted = await deleteStoredCollection(id);
+    if (!deleted) {
+      return NextResponse.json(
+        { success: false, error: 'Record not found or already deleted' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Chanda record successfully deleted',
+    });
+  } catch (error: unknown) {
+    console.error('Error deleting collection:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to delete collection' },
       { status: 500 }
     );
   }

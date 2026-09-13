@@ -1,4 +1,4 @@
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient, Db, ObjectId } from 'mongodb';
 import { ChandaEntry } from './types';
 import { SASARAM_ROUZA_ROAD_COORDS } from './defaultUsers';
 
@@ -120,4 +120,35 @@ export async function insertStoredCollection(entry: Omit<ChandaEntry, '_id' | 'r
   global._inMemoryChandaStore.unshift(newEntry);
 
   return newEntry;
+}
+
+export async function deleteStoredCollection(id: string): Promise<boolean> {
+  const db = await getDb();
+  let deletedFromMongo = false;
+
+  if (db) {
+    try {
+      let filter: Record<string, unknown> = { _id: id };
+      try {
+        if (ObjectId.isValid(id)) {
+          filter = { _id: new ObjectId(id) };
+        }
+      } catch {
+        // use string match
+      }
+
+      const result = await db.collection('collections').deleteOne(filter);
+      deletedFromMongo = result.deletedCount > 0;
+    } catch (err) {
+      console.warn('MongoDB delete failed, attempting local store delete:', err);
+    }
+  }
+
+  if (global._inMemoryChandaStore) {
+    const initialLen = global._inMemoryChandaStore.length;
+    global._inMemoryChandaStore = global._inMemoryChandaStore.filter((item) => item._id !== id);
+    return deletedFromMongo || global._inMemoryChandaStore.length < initialLen;
+  }
+
+  return deletedFromMongo;
 }

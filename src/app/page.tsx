@@ -115,6 +115,35 @@ export default function DashboardPage() {
     triggerToast(`रसीद ${newEntry.receiptNo} सफलतापूर्वक दर्ज हुई!`);
   };
 
+  // Handler when an entry is deleted
+  const handleDeleteEntry = async (id: string, receiptNo: string) => {
+    try {
+      const res = await fetch(`/api/collections?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        throw new Error(json.error || 'रसीद हटाने में विफलता');
+      }
+
+      // Optimistically update local entries
+      setEntries((prev) => prev.filter((item) => item._id !== id));
+      if (selectedReceiptEntry?._id === id) {
+        setSelectedReceiptEntry(null);
+      }
+      triggerToast(`रसीद ${receiptNo} सफलतापूर्वक हटा दी गई`);
+      // Refresh full stats
+      fetchData();
+    } catch (err: unknown) {
+      console.error('Delete error:', err);
+      if (err instanceof Error) {
+        alert(`त्रुटि: ${err.message}`);
+      } else {
+        alert('रसीद हटाने में त्रुटि आई');
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#faf6f0]">
       {/* Header */}
@@ -237,6 +266,7 @@ export default function DashboardPage() {
             <LogBook
               entries={entries}
               onSelectEntry={(entry) => setSelectedReceiptEntry(entry)}
+              onDeleteEntry={handleDeleteEntry}
               onOpenNewEntry={() => {
                 if (!currentUser) {
                   setIsLoginModalOpen(true);
@@ -360,6 +390,7 @@ export default function DashboardPage() {
       <ReceiptModal
         entry={selectedReceiptEntry}
         onClose={() => setSelectedReceiptEntry(null)}
+        onDeleteEntry={handleDeleteEntry}
       />
     </div>
   );
